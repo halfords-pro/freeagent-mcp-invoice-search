@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosError } from 'axios';
-import { InvoiceSearchConfig, SearchParams, SearchResponse } from './types.js';
+import { InvoiceSearchConfig, SearchParams, SearchResponse, HealthResponse, StatsResponse } from './types.js';
 
 export class FreeagentInvoiceCacheClient {
   private axiosInstance: AxiosInstance;
@@ -60,6 +60,64 @@ export class FreeagentInvoiceCacheClient {
         });
 
         throw new Error(`Invoice API error (${statusCode}): ${message}`);
+      }
+      throw error;
+    }
+  }
+
+  // Health check method
+  async getHealth(): Promise<HealthResponse> {
+    console.error('[InvoiceCache] Checking API health');
+
+    try {
+      const response = await this.axiosInstance.get<HealthResponse>('/health');
+
+      console.error('[InvoiceCache] Health check completed:', {
+        status: response.data.status,
+        database: response.data.database,
+      });
+
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const statusCode = error.response?.status;
+        const message = error.response?.data?.message || error.message;
+
+        console.error('[InvoiceCache] HTTP Error:', {
+          status: statusCode,
+          message: message,
+        });
+
+        throw new Error(`Health check API error (${statusCode}): ${message}`);
+      }
+      throw error;
+    }
+  }
+
+  // Statistics method
+  async getStats(): Promise<StatsResponse> {
+    console.error('[InvoiceCache] Fetching statistics');
+
+    try {
+      const response = await this.axiosInstance.get<StatsResponse>('/api/stats');
+
+      console.error('[InvoiceCache] Statistics fetched:', {
+        total_invoices: response.data.total_invoices,
+        total_items: response.data.total_items,
+      });
+
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const statusCode = error.response?.status;
+        const message = error.response?.data?.message || error.message;
+
+        console.error('[InvoiceCache] HTTP Error:', {
+          status: statusCode,
+          message: message,
+        });
+
+        throw new Error(`Stats API error (${statusCode}): ${message}`);
       }
       throw error;
     }

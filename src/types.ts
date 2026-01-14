@@ -31,3 +31,17 @@ export interface SearchResponse {
   limit: number;
   offset: number;
 }
+
+// Health check response
+export interface HealthResponse {
+  status: string;      // e.g., "healthy"
+  database: string;    // e.g., "connected"
+}
+
+// Statistics response
+export interface StatsResponse {
+  total_invoices: number;
+  total_items: number;
+  date_range: { [key: string]: string };
+  status_breakdown: Array<{ [key: string]: any }>;
+}

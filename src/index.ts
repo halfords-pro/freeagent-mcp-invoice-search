@@ -87,6 +87,24 @@ class InvoiceSearchServer {
             required: ['reference'],
           },
         },
+        {
+          name: 'check_health',
+          description: 'Check the health status of the invoice API and database connection.',
+          inputSchema: {
+            type: 'object',
+            properties: {},
+            required: [],
+          },
+        },
+        {
+          name: 'get_stats',
+          description: 'Get statistics about the invoice cache, including total counts and status breakdown.',
+          inputSchema: {
+            type: 'object',
+            properties: {},
+            required: [],
+          },
+        },
       ],
     }));
 
@@ -97,6 +115,14 @@ class InvoiceSearchServer {
       try {
         if (request.params.name === 'search_invoice') {
           return await this.handleSearchInvoice(request.params.arguments);
+        }
+
+        if (request.params.name === 'check_health') {
+          return await this.handleCheckHealth();
+        }
+
+        if (request.params.name === 'get_stats') {
+          return await this.handleGetStats();
         }
 
         throw new Error(`Unknown tool: ${request.params.name}`);
@@ -124,6 +150,34 @@ class InvoiceSearchServer {
     const result = await this.client.searchInvoice(params);
 
     // Format response
+    return {
+      content: [
+        {
+          type: 'text',
+          text: JSON.stringify(result, null, 2),
+        },
+      ],
+    };
+  }
+
+  // Health check handler
+  private async handleCheckHealth() {
+    const result = await this.client.getHealth();
+
+    return {
+      content: [
+        {
+          type: 'text',
+          text: JSON.stringify(result, null, 2),
+        },
+      ],
+    };
+  }
+
+  // Stats handler
+  private async handleGetStats() {
+    const result = await this.client.getStats();
+
     return {
       content: [
         {
