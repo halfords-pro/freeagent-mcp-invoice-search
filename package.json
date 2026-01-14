@@ -1,0 +1,36 @@
+{
+  "name": "freeagent-mcp-invoice-search",
+  "version": "1.0.0",
+  "description": "MCP server for searching invoices by reference number",
+  "type": "module",
+  "main": "./build/index.js",
+  "bin": {
+    "invoice-search-server": "./build/index.js"
+  },
+  "scripts": {
+    "build": "tsc && chmod +x build/index.js",
+    "watch": "tsc --watch",
+    "prepare": "npm run build",
+    "inspector": "npx @modelcontextprotocol/inspector build/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.6.0",
+    "axios": "^1.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "invoice",
+    "search",
+    "claude"
+  ],
+  "license": "MIT",
+  "private": true
+}
